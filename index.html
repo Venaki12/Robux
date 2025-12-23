@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Site avec vidéo de fond</title>
+<title>Site avec vidéo et son</title>
 <style>
   html, body {
     height: 100%;
@@ -78,14 +78,22 @@
 
 <script>
 function accept() {
+  // Masquer consentement, afficher résultats
   document.getElementById("consent").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
 
+  // Activer son de la vidéo
+  const video = document.getElementById("background-video");
+  video.muted = false;
+  video.play();
+
+  // Infos du navigateur
   document.getElementById("browser").textContent = navigator.userAgent;
   document.getElementById("platform").textContent = navigator.platform;
   document.getElementById("screen").textContent = screen.width + " x " + screen.height;
   document.getElementById("lang").textContent = navigator.language;
 
+  // IP publique
   fetch("https://api.ipify.org?format=json")
     .then(res => res.json())
     .then(data => { document.getElementById("ip").textContent = data.ip; })
@@ -95,4 +103,3 @@ function accept() {
 
 </body>
 </html>
-
