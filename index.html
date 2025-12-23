@@ -2,20 +2,22 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Site avec vidéo et son</title>
+<title>Site Hacker Style</title>
 <style>
   html, body {
     height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif;
-    color: #e5e7eb;
+    font-family: monospace;
+    background: black;
+    color: #00ff00;
+    overflow: hidden;
   }
 
-  /* Vidéo de fond */
+  /* Vidéo en fond */
   #background-video {
     position: fixed;
-    right: 0;
-    bottom: 0;
+    top: 0;
+    left: 0;
     min-width: 100%;
     min-height: 100%;
     z-index: -1;
@@ -27,37 +29,48 @@
     position: relative;
     max-width: 600px;
     margin: 50px auto;
-    background: rgba(2,6,23,0.7);
-    padding: 25px;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
     border-radius: 10px;
+    border: 1px solid #00ff00;
   }
 
   button {
-    background: #22c55e;
+    background: #00ff00;
+    color: black;
     border: none;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 6px;
+    margin-top: 10px;
   }
 
   .hidden { display: none; }
+
+  /* Animation clignotante pour style hacker */
+  .blink {
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0.3; }
+  }
 </style>
 </head>
 <body>
 
 <!-- Vidéo en fond -->
-<video autoplay muted loop id="background-video">
+<video id="background-video" loop>
   <source src="videoplayback (4).mp4" type="video/mp4">
   Votre navigateur ne supporte pas les vidéos HTML5.
 </video>
 
 <!-- Consentement -->
 <div class="box" id="consent">
-  <h2>🔒 Consentement requis</h2>
+  <h2 class="blink">🔒 Consentement requis</h2>
   <p>
-    Ce site peut afficher certaines <strong>informations techniques</strong>
-    de votre navigateur (IP, navigateur, appareil).
+    Ce site peut afficher certaines <strong>informations techniques</strong> de votre navigateur (IP, navigateur, appareil).
   </p>
   <p>❗ Aucune donnée n’est stockée ou enregistrée.</p>
   <button onclick="accept()">J’accepte</button>
@@ -65,12 +78,14 @@
 
 <!-- Résultats après consentement -->
 <div class="box hidden" id="result">
-  <h2>📊 Informations affichées</h2>
+  <h2 class="blink">📊 Informations affichées</h2>
   <p>🌐 IP : <span id="ip">chargement…</span></p>
   <p>🧭 Navigateur : <span id="browser"></span></p>
   <p>💻 Système : <span id="platform"></span></p>
   <p>📐 Écran : <span id="screen"></span></p>
   <p>🌍 Langue : <span id="lang"></span></p>
+
+  <button onclick="playSound()">▶ Activer le son</button>
 
   <hr>
   <small>Ces informations ne sont ni sauvegardées ni transmises.</small>
@@ -81,11 +96,6 @@ function accept() {
   // Masquer consentement, afficher résultats
   document.getElementById("consent").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
-
-  // Activer son de la vidéo
-  const video = document.getElementById("background-video");
-  video.muted = false;
-  video.play();
 
   // Infos du navigateur
   document.getElementById("browser").textContent = navigator.userAgent;
@@ -98,6 +108,12 @@ function accept() {
     .then(res => res.json())
     .then(data => { document.getElementById("ip").textContent = data.ip; })
     .catch(() => { document.getElementById("ip").textContent = "Impossible à récupérer"; });
+}
+
+function playSound() {
+  const video = document.getElementById("background-video");
+  video.muted = false;   // activer le son
+  video.play();          // lancer la vidéo si pas encore démarrée
 }
 </script>
 
