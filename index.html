@@ -2,21 +2,36 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Informations de connexion</title>
+<title>Site avec vidéo de fond</title>
 <style>
-  body {
+  html, body {
+    height: 100%;
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: #0f172a;
     color: #e5e7eb;
-    padding: 30px;
   }
+
+  /* Vidéo de fond */
+  #background-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    object-fit: cover;
+  }
+
+  /* Contenu par-dessus */
   .box {
+    position: relative;
     max-width: 600px;
-    margin: auto;
-    background: #020617;
+    margin: 50px auto;
+    background: rgba(2,6,23,0.7);
     padding: 25px;
     border-radius: 10px;
   }
+
   button {
     background: #22c55e;
     border: none;
@@ -25,31 +40,30 @@
     cursor: pointer;
     border-radius: 6px;
   }
-  .danger {
-    color: #f87171;
-    font-size: 14px;
-  }
+
   .hidden { display: none; }
 </style>
 </head>
 <body>
 
+<!-- Vidéo en fond -->
+<video autoplay muted loop id="background-video">
+  <source src="videoplayback%20(4).mp4" type="video/mp4">
+  Votre navigateur ne supporte pas les vidéos HTML5.
+</video>
+
+<!-- Consentement -->
 <div class="box" id="consent">
   <h2>🔒 Consentement requis</h2>
   <p>
     Ce site peut afficher certaines <strong>informations techniques</strong>
     de votre navigateur (IP, navigateur, appareil).
   </p>
-  <p class="danger">
-    ❗ Aucune donnée n’est stockée ou enregistrée.
-  </p>
-  <p>
-    En cliquant sur <strong>“J’accepte”</strong>, vous consentez à l’affichage
-    temporaire de ces informations.
-  </p>
+  <p>❗ Aucune donnée n’est stockée ou enregistrée.</p>
   <button onclick="accept()">J’accepte</button>
 </div>
 
+<!-- Résultats après consentement -->
 <div class="box hidden" id="result">
   <h2>📊 Informations affichées</h2>
   <p>🌐 IP : <span id="ip">chargement…</span></p>
@@ -59,9 +73,7 @@
   <p>🌍 Langue : <span id="lang"></span></p>
 
   <hr>
-  <small>
-    Ces informations ne sont ni sauvegardées ni transmises.
-  </small>
+  <small>Ces informations ne sont ni sauvegardées ni transmises.</small>
 </div>
 
 <script>
@@ -71,18 +83,13 @@ function accept() {
 
   document.getElementById("browser").textContent = navigator.userAgent;
   document.getElementById("platform").textContent = navigator.platform;
-  document.getElementById("screen").textContent =
-    screen.width + " x " + screen.height;
+  document.getElementById("screen").textContent = screen.width + " x " + screen.height;
   document.getElementById("lang").textContent = navigator.language;
 
   fetch("https://api.ipify.org?format=json")
     .then(res => res.json())
-    .then(data => {
-      document.getElementById("ip").textContent = data.ip;
-    })
-    .catch(() => {
-      document.getElementById("ip").textContent = "Impossible à récupérer";
-    });
+    .then(data => { document.getElementById("ip").textContent = data.ip; })
+    .catch(() => { document.getElementById("ip").textContent = "Impossible à récupérer"; });
 }
 </script>
 
